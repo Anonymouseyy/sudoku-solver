@@ -20,6 +20,7 @@ textFont = pg.font.Font("OpenSans-Regular.ttf", 40)
 moveFont.bold = True
 
 board = h.initial_state()
+board_tiles = []
 
 
 def draw_board():
@@ -30,6 +31,13 @@ def draw_board():
     board_back = pg.Rect(0, 0, dim, dim)
     board_back.center = (width // 2, height // 2)
     pg.draw.rect(screen, white, board_back, border_radius=5)
+
+    for i in range(len(board)):
+        tile_row = []
+        for j in range(len(board)):
+            tile_row.append(h.Tile())
+
+        board_tiles.append(tile_row)
 
 
 while True:
