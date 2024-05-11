@@ -25,8 +25,6 @@ board_tiles = []
 
 def draw_board():
     dim = width - 100
-    tile_w = dim/9
-    tile_h = dim/9
 
     board_back = pg.Rect(0, 0, dim, dim)
     board_back.center = (width // 2, height // 2)
