@@ -11,6 +11,8 @@ black = (0, 0, 0)
 white = (255, 255, 255)
 bg_gray = (51, 51, 51)
 board_gray = (84, 84, 84)
+tile_color = (227, 227, 227)
+selected_color = (150, 187, 250)
 
 
 screen = pg.display.set_mode((width, height), pg.RESIZABLE)
@@ -20,9 +22,13 @@ textFont = pg.font.Font("OpenSans-Regular.ttf", 40)
 
 board = h.initial_state()
 board_tiles = []
+board_back = pg.Rect(0, 0, 0, 0)
+selected = None
 
 
 def draw_board():
+    global board_tiles, board_back
+    board_tiles = []
     dim = min(width, height) - 100
     tile_dim = dim//9
     line_width = 2
@@ -32,7 +38,6 @@ def draw_board():
     board_back.center = (width // 2, height // 2)
     pg.draw.rect(screen, black, board_back)
 
-    x_off = 0
     y_off = 0
 
     for i in range(len(board)):
@@ -44,7 +49,12 @@ def draw_board():
         for j in range(len(board)):
             if j == 3 or j == 6:
                 x_off += line_width
-            tile = h.Tile(board_back.top+tile_dim*j+x_off, board_back.left+tile_dim*i+y_off, tile_dim, board[i][j])
+
+            col = tile_color
+            if selected == (i, j):
+                col = selected_color
+
+            tile = h.Tile(board_back.top+tile_dim*j+x_off, board_back.left+tile_dim*i+y_off, tile_dim, board[i][j], col)
             tile.draw(screen)
             tile_row.append(tile)
 
@@ -55,6 +65,15 @@ while True:
     for event in pg.event.get():
         if event.type == pg.QUIT:
             sys.exit()
+
+        if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
+            if not board_back.collidepoint(event.pos):
+                selected = None
+            else:
+                for i in range(len(board_tiles)):
+                    for j in range(len(board_tiles)):
+                        if board_tiles[i][j].rect.collidepoint(event.pos):
+                            selected = (i, j)
 
     width, height = screen.get_size()
     screen.fill(bg_gray)
