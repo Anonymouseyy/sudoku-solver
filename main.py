@@ -75,6 +75,11 @@ while True:
                         if board_tiles[i][j].rect.collidepoint(event.pos):
                             selected = (i, j)
 
+        if selected and event.type == pg.KEYDOWN:
+            num = int(event.key)-pg.K_0
+            if 0 < num < 10:
+                board[selected[0]][selected[1]] = num
+
     width, height = screen.get_size()
     screen.fill(bg_gray)
     draw_board()
