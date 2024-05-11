@@ -16,9 +16,7 @@ board_gray = (84, 84, 84)
 screen = pg.display.set_mode((width, height), pg.RESIZABLE)
 pg.display.set_caption('Sudoku Solver')
 
-moveFont = pg.font.Font("OpenSans-Regular.ttf", 40)
 textFont = pg.font.Font("OpenSans-Regular.ttf", 40)
-moveFont.bold = True
 
 board = h.initial_state()
 board_tiles = []
