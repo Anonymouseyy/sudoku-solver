@@ -1,5 +1,5 @@
 import pygame as pg
-import sys, copy, time
+import sys, random
 
 import helpers as h
 
@@ -24,15 +24,29 @@ board_tiles = []
 
 def draw_board():
     dim = min(width, height) - 100
+    tile_dim = dim//9
+    line_width = 2
+    dim = tile_dim*9+line_width*2
 
     board_back = pg.Rect(0, 0, dim, dim)
     board_back.center = (width // 2, height // 2)
-    pg.draw.rect(screen, board_gray, board_back, border_radius=5)
+    pg.draw.rect(screen, black, board_back)
+
+    x_off = 0
+    y_off = 0
 
     for i in range(len(board)):
+        x_off = 0
         tile_row = []
+        if i == 3 or i == 6:
+            y_off += line_width
+
         for j in range(len(board)):
-            tile_row.append(h.Tile())
+            if j == 3 or j == 6:
+                x_off += line_width
+            tile = h.Tile(board_back.top+tile_dim*j+x_off, board_back.left+tile_dim*i+y_off, tile_dim, board[i][j])
+            tile.draw(screen)
+            tile_row.append(tile)
 
         board_tiles.append(tile_row)
 
