@@ -9,7 +9,8 @@ width, height = 800, 800
 
 black = (0, 0, 0)
 white = (255, 255, 255)
-bg_gray = (250, 248, 239)
+bg_gray = (51, 51, 51)
+board_gray = (84, 84, 84)
 
 
 screen = pg.display.set_mode((width, height), pg.RESIZABLE)
@@ -24,11 +25,11 @@ board_tiles = []
 
 
 def draw_board():
-    dim = width - 100
+    dim = min(width, height) - 100
 
     board_back = pg.Rect(0, 0, dim, dim)
     board_back.center = (width // 2, height // 2)
-    pg.draw.rect(screen, white, board_back, border_radius=5)
+    pg.draw.rect(screen, board_gray, board_back, border_radius=5)
 
     for i in range(len(board)):
         tile_row = []
@@ -43,6 +44,8 @@ while True:
         if event.type == pg.QUIT:
             sys.exit()
 
+    width, height = screen.get_size()
+    screen.fill(bg_gray)
     draw_board()
 
     clock.tick(60)
