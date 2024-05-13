@@ -18,8 +18,6 @@ selected_color = (150, 187, 250)
 screen = pg.display.set_mode((width, height), pg.RESIZABLE)
 pg.display.set_caption('Sudoku Solver')
 
-textFont = pg.font.Font("OpenSans-Regular.ttf", 40)
-
 board = h.initial_state()
 board_tiles = []
 board_back = pg.Rect(0, 0, 0, 0)

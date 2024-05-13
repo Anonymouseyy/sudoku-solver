@@ -1,7 +1,7 @@
 import pygame as pg
 
 pg.init()
-value_font = pg.font.Font("OpenSans-Regular.ttf", 30)
+value_font = pg.font.Font("OpenSans-Regular.ttf", 50)
 
 
 class Tile:
@@ -30,3 +30,31 @@ class Tile:
 
 def initial_state():
     return [[0 for _ in range(9)] for _ in range(9)]
+
+
+def to_group_major(board):
+    """
+    :param board: A row-major Sudoku board
+    :return: Group major board with 0, 1, 2
+                                    3, 4, 5
+                                    6, 7, 8 order for each group and the whole board
+    """
+
+    gm_board = []
+    x_off = 0
+    y_off = 0
+
+    for i in range(len(board)):
+        tile_cell = []
+
+        for j in range(len(board)):
+            tile_cell.append(board[(j//3)+x_off*3][(j % 3)+y_off*3])
+
+        gm_board.append(tile_cell)
+        x_off += 1
+
+        if x_off % 3 == 0:
+            x_off = 0
+            y_off += 1
+
+    return gm_board
