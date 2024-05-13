@@ -58,3 +58,7 @@ def to_group_major(board):
             y_off += 1
 
     return gm_board
+
+
+def to_column_major(board):
+    return [[row[i] for row in board] for i in range(len(board))]
