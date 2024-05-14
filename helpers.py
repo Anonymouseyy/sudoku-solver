@@ -62,3 +62,14 @@ def to_group_major(board):
 
 def to_column_major(board):
     return [[row[i] for row in board] for i in range(len(board))]
+
+
+def check_validity(board):
+    """
+    :param board: Row major board
+    :return: True if board is valid, false if not
+    """
+
+    return not (any([row != list(set(row)) for row in board]) or
+                any([col != list(set(col)) for col in to_column_major(board)]) or
+                any([group != list(set(group)) for group in to_group_major(board)]))
