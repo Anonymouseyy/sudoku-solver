@@ -78,8 +78,6 @@ while True:
             if 0 <= num < 10:
                 board[selected[0]][selected[1]] = num
 
-            print(h.check_validity(board))
-
     width, height = screen.get_size()
     screen.fill(bg_gray)
     draw_board()

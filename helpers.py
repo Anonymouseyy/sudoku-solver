@@ -69,7 +69,9 @@ def check_validity(board):
     :param board: Row major board
     :return: True if board is valid, false if not
     """
-
-    return not (any([row != list(set(row)) for row in board]) or
-                any([col != list(set(col)) for col in to_column_major(board)]) or
-                any([group != list(set(group)) for group in to_group_major(board)]))
+    # Needs to account for 0s
+    return not (any([len([x for x in row if x != 0]) != len(set([x for x in row if x != 0])) for row in board]) or
+                any([len([x for x in col if x != 0]) != len(set([x for x in col if x != 0]))
+                     for col in to_column_major(board)]) or
+                any([len([x for x in group if x != 0]) != len(set([x for x in group if x != 0]))
+                                                                 for group in to_group_major(board)]))
