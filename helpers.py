@@ -48,7 +48,7 @@ def to_group_major(board):
         tile_cell = []
 
         for j in range(len(board)):
-            tile_cell.append(board[(j//3)+x_off*3][(j % 3)+y_off*3])
+            tile_cell.append(board[(j // 3) + x_off * 3][(j % 3) + y_off * 3])
 
         gm_board.append(tile_cell)
         x_off += 1
@@ -69,9 +69,36 @@ def check_validity(board):
     :param board: Row major board
     :return: True if board is valid, false if not
     """
-    # Needs to account for 0s
+
     return not (any([len([x for x in row if x != 0]) != len(set([x for x in row if x != 0])) for row in board]) or
                 any([len([x for x in col if x != 0]) != len(set([x for x in col if x != 0]))
                      for col in to_column_major(board)]) or
                 any([len([x for x in group if x != 0]) != len(set([x for x in group if x != 0]))
-                                                                 for group in to_group_major(board)]))
+                     for group in to_group_major(board)]))
+
+
+def get_group(i, j):
+    return (i // 3) + ((j // 3) * 3)
+
+
+class SudokuGame:
+    def __init__(self, board=None):
+        if board is None:
+            board = initial_state()
+        self.board = board
+        self.domains = {
+            (i, j): list(range(1, 10))
+            for i in range(9) for j in range(9) if not board[i][j]
+        }
+
+    def enforce_consistency(self):
+        """
+        Update `self.domains` such that each variable is consistent with
+        its row, column, and group
+        """
+
+        for i, j in self.domains.keys():
+            for num in self.domains[i, j].copy():
+                if (num in self.board[i] or num in to_column_major(self.board)[j]
+                        or num in to_group_major(self.board)[get_group(i, j)]):
+                    self.domains[i, j].remove(num)
