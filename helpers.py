@@ -102,3 +102,28 @@ class SudokuGame:
                 if (num in self.board[i] or num in to_column_major(self.board)[j]
                         or num in to_group_major(self.board)[get_group(i, j)]):
                     self.domains[i, j].remove(num)
+
+    def solve(self):
+        self.enforce_consistency()
+        self.backtrack(dict())
+
+    def select_unassigned_variable(self, assignment):
+        """
+        :param assignment: The current assignment of variables
+        :return: The variable to assign a value to based on which variable has the smallest domain
+        """
+
+        fields = [var for var in self.domains.keys() if var not in assignment.keys()]
+        fields.sort(key=lambda x: (len(self.domains[x])))
+        return fields[0] if fields else None
+
+    def assignment_complete(self, assignment):
+        """
+        Return True if `assignment` is complete (i.e., assigns a value to each
+        Sudoku cell variable); return False otherwise.
+        """
+
+        return self.domains.keys() == assignment.keys()
+
+    def backtrack(self, assignment):
+        pass
