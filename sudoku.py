@@ -1,5 +1,6 @@
 from helpers import *
 
+
 class SudokuGame:
     def __init__(self, board=None):
         if board is None:
@@ -24,7 +25,8 @@ class SudokuGame:
 
     def solve(self):
         self.enforce_consistency()
-        self.backtrack(dict())
+        assignment = self.backtrack(dict())
+        return assignment
 
     def select_unassigned_variable(self, assignment):
         """
@@ -52,6 +54,7 @@ class SudokuGame:
         return b
 
     def backtrack(self, assignment):
+        print(self.domains.keys(), assignment.keys())
         if self.assignment_complete(assignment) and check_validity(self.create_board_from_assignment(assignment)):
             return assignment
 

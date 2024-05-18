@@ -2,6 +2,7 @@ import pygame as pg
 import sys, random
 
 import helpers as h
+from sudoku import SudokuGame
 
 pg.init()
 clock = pg.time.Clock()
@@ -22,6 +23,7 @@ board = h.initial_state()
 board_tiles = []
 board_back = pg.Rect(0, 0, 0, 0)
 selected = None
+game = None
 
 
 def draw_board():
@@ -72,6 +74,13 @@ while True:
                     for j in range(len(board_tiles)):
                         if board_tiles[i][j].rect.collidepoint(event.pos):
                             selected = (i, j)
+
+        if event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
+            game = SudokuGame(board)
+            res = game.solve()
+
+            if res:
+                board = res
 
         if selected and event.type == pg.KEYDOWN:
             num = int(event.key)-pg.K_0
