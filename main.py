@@ -80,7 +80,7 @@ while True:
             res = game.solve()
 
             if res:
-                board = res
+                board = game.create_board_from_assignment(res)
 
         if selected and event.type == pg.KEYDOWN:
             num = int(event.key)-pg.K_0

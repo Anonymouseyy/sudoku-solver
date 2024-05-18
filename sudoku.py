@@ -1,3 +1,4 @@
+import copy
 from helpers import *
 
 
@@ -47,14 +48,13 @@ class SudokuGame:
         return self.domains.keys() == assignment.keys()
 
     def create_board_from_assignment(self, assignment):
-        b = self.board.copy()
+        b = copy.deepcopy(self.board)
         for i, j in assignment.keys():
             b[i][j] = assignment[i, j]
 
         return b
 
     def backtrack(self, assignment):
-        print(self.domains.keys(), assignment.keys())
         if self.assignment_complete(assignment) and check_validity(self.create_board_from_assignment(assignment)):
             return assignment
 
@@ -64,16 +64,17 @@ class SudokuGame:
             return None
 
         for val in self.domains[var]:
-            if val not in assignment.values():
-                assignment[var] = val
+            assignment[var] = val
 
-                if not check_validity(self.create_board_from_assignment(assignment)):
-                    assignment.pop(var)
-                    continue
-
-                result = self.backtrack(assignment)
-                if result is not None:
-                    return result
+            if not check_validity(self.create_board_from_assignment(assignment)):
+                print(assignment)
+                print(self.create_board_from_assignment(assignment))
                 assignment.pop(var)
+                continue
+
+            result = self.backtrack(assignment)
+            if result is not None:
+                return result
+            assignment.pop(var)
 
         return None
