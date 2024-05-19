@@ -19,7 +19,7 @@ class Tile:
         self.rect.topleft = (self.x, self.y)
 
         pg.draw.rect(surface, self.color, self.rect)
-        pg.draw.rect(surface, self.text_color, self.rect, width=1)
+        pg.draw.rect(surface, (0, 0, 0), self.rect, width=1)
 
         if self.value:
             num = value_font.render(f'{self.value}', True, self.text_color)

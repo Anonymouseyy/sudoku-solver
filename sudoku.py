@@ -67,8 +67,6 @@ class SudokuGame:
             assignment[var] = val
 
             if not check_validity(self.create_board_from_assignment(assignment)):
-                print(assignment)
-                print(self.create_board_from_assignment(assignment))
                 assignment.pop(var)
                 continue
 

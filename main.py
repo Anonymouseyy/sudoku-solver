@@ -38,23 +38,24 @@ def draw_board():
     board_back.center = (width // 2, height // 2)
     pg.draw.rect(screen, black, board_back)
 
-    y_off = 0
+    x_off = 0
 
     for i in range(len(board)):
-        x_off = 0
+        y_off = 0
         tile_row = []
         if i == 3 or i == 6:
-            y_off += line_width
+            x_off += line_width
 
         for j in range(len(board)):
             if j == 3 or j == 6:
-                x_off += line_width
+                y_off += line_width
 
             col = tile_color
             if selected == (i, j):
                 col = selected_color
 
-            tile = h.Tile(board_back.top+tile_dim*j+x_off, board_back.left+tile_dim*i+y_off, tile_dim, board[i][j], col)
+            tile = h.Tile(board_back.left+(tile_dim*i)+x_off, board_back.top+(tile_dim*j)+y_off, tile_dim, board[i][j],
+                          col)
             tile.draw(screen)
             tile_row.append(tile)
 
@@ -70,10 +71,10 @@ while True:
             if not board_back.collidepoint(event.pos):
                 selected = None
             else:
-                for i in range(len(board_tiles)):
-                    for j in range(len(board_tiles)):
-                        if board_tiles[i][j].rect.collidepoint(event.pos):
-                            selected = (i, j)
+                for x in range(len(board_tiles)):
+                    for y in range(len(board_tiles)):
+                        if board_tiles[x][y].rect.collidepoint(event.pos):
+                            selected = (x, y)
 
         if event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
             game = SudokuGame(board)
@@ -86,6 +87,8 @@ while True:
             num = int(event.key)-pg.K_0
             if 0 <= num < 10:
                 board[selected[0]][selected[1]] = num
+
+            print(board)
 
     width, height = screen.get_size()
     screen.fill(bg_gray)
