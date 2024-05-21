@@ -1,5 +1,5 @@
 import pygame as pg
-import sys, threading
+import sys, threading, random
 
 import helpers as h
 from sudoku import SudokuGame
@@ -14,7 +14,7 @@ bg_gray = (51, 51, 51)
 board_gray = (84, 84, 84)
 tile_color = (227, 227, 227)
 selected_color = (150, 187, 250)
-
+font = pg.font.Font("OpenSans-Regular.ttf", 50)
 
 screen = pg.display.set_mode((width, height), pg.RESIZABLE)
 pg.display.set_caption('Sudoku Solver')
@@ -23,16 +23,19 @@ board = h.initial_state()
 board_tiles = []
 board_back = pg.Rect(0, 0, 0, 0)
 selected = None
-solving = False
+solving = None
+solving_rect = pg.Rect(0, 0, 0, 0)
 
 
 def solve():
-    global board
+    global board, solving
     game = SudokuGame(board)
     res = game.solve()
 
     if res:
         board = game.create_board_from_assignment(res)
+
+    solving = None
 
 
 def draw_board():
@@ -71,12 +74,26 @@ def draw_board():
         board_tiles.append(tile_row)
 
 
+def draw_loading(col):
+    global solving_rect
+    dim = min(width, height)
+    solving_rect = pg.Rect(0, 0, dim//3, dim//7)
+    solving_rect.center = (width // 2, height // 2)
+
+    pg.draw.rect(screen, col, solving_rect)
+
+    text = font.render('Solving...', True, [255-o for o in col])
+    text_rect = text.get_rect()
+    text_rect.center = solving_rect.center
+    screen.blit(text, text_rect)
+
+
 while True:
     for event in pg.event.get():
         if event.type == pg.QUIT:
             sys.exit()
 
-        if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
+        if event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and not solving:
             if not board_back.collidepoint(event.pos):
                 selected = None
             else:
@@ -85,13 +102,17 @@ while True:
                         if board_tiles[x][y].rect.collidepoint(event.pos):
                             selected = (x, y)
 
-        if event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
-            solve = threading.Thread(target=solve)
-            solve.start()
+        if event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and solving:
+            if solving_rect.collidepoint(event.pos):
+                solving = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-            solving = True
+        if event.type == pg.KEYDOWN and event.key == pg.K_RETURN and not solving:
+            solve_thread = threading.Thread(target=solve)
+            solve_thread.start()
 
-        if selected and event.type == pg.KEYDOWN:
+            solving = (0, 0, 0)
+
+        if selected and event.type == pg.KEYDOWN and not solving:
             num = int(event.key)-pg.K_0
             if 0 <= num < 10:
                 board[selected[0]][selected[1]] = num
@@ -99,6 +120,9 @@ while True:
     width, height = screen.get_size()
     screen.fill(bg_gray)
     draw_board()
+
+    if solving:
+        draw_loading(solving)
 
     clock.tick(60)
     pg.display.flip()
