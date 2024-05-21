@@ -42,9 +42,9 @@ def draw_board():
     global board_tiles, board_back
     board_tiles = []
     dim = min(width, height) - 100
-    tile_dim = dim//9
+    tile_dim = dim // 9
     line_width = 2
-    dim = tile_dim*9+line_width*2
+    dim = tile_dim * 9 + line_width * 2
 
     board_back = pg.Rect(0, 0, dim, dim)
     board_back.center = (width // 2, height // 2)
@@ -66,8 +66,8 @@ def draw_board():
             if selected == (i, j):
                 col = selected_color
 
-            tile = h.Tile(board_back.left+(tile_dim*i)+x_off, board_back.top+(tile_dim*j)+y_off, tile_dim, board[i][j],
-                          col)
+            tile = h.Tile(board_back.left + (tile_dim * i) + x_off, board_back.top + (tile_dim * j) + y_off, tile_dim,
+                          board[i][j], col)
             tile.draw(screen)
             tile_row.append(tile)
 
@@ -77,12 +77,12 @@ def draw_board():
 def draw_loading(col):
     global solving_rect
     dim = min(width, height)
-    solving_rect = pg.Rect(0, 0, dim//3, dim//7)
+    solving_rect = pg.Rect(0, 0, dim // 3, dim // 7)
     solving_rect.center = (width // 2, height // 2)
 
     pg.draw.rect(screen, col, solving_rect)
 
-    text = font.render('Solving...', True, [255-o for o in col])
+    text = font.render('Solving...', True, [255 - o for o in col])
     text_rect = text.get_rect()
     text_rect.center = solving_rect.center
     screen.blit(text, text_rect)
@@ -116,14 +116,21 @@ while True:
             if event.key == pg.K_BACKSPACE:
                 board = h.initial_state()
 
+            if event.key == pg.K_TAB:
+                if selected is None or selected == (8, 8):
+                    selected = (0, 0)
+                else:
+                    new = selected[0] + 1
+                    selected = (new % 9, selected[1] + new // 9)
+
         if selected and event.type == pg.KEYDOWN and not solving:
-            num = int(event.key)-pg.K_0
+            num = int(event.key) - pg.K_0
             if 0 <= num < 10:
                 board[selected[0]][selected[1]] = num
 
             if int(event.key) == pg.K_KP0:
                 board[selected[0]][selected[1]] = 0
-            num = int(event.key)-pg.K_KP1+1
+            num = int(event.key) - pg.K_KP1 + 1
             if 1 <= num < 10:
                 board[selected[0]][selected[1]] = num
 

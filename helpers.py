@@ -60,7 +60,7 @@ def to_group_major(board):
     return gm_board
 
 
-def to_column_major(board):
+def to_row_column_major(board):
     return [[row[i] for row in board] for i in range(len(board))]
 
 
@@ -72,7 +72,7 @@ def check_validity(board):
 
     return not (any([len([x for x in row if x != 0]) != len(set([x for x in row if x != 0])) for row in board]) or
                 any([len([x for x in col if x != 0]) != len(set([x for x in col if x != 0]))
-                     for col in to_column_major(board)]) or
+                     for col in to_row_column_major(board)]) or
                 any([len([x for x in group if x != 0]) != len(set([x for x in group if x != 0]))
                      for group in to_group_major(board)]))
 
