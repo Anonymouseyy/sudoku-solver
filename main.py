@@ -1,5 +1,5 @@
 import pygame as pg
-import sys, random
+import sys, threading
 
 import helpers as h
 from sudoku import SudokuGame
@@ -23,7 +23,16 @@ board = h.initial_state()
 board_tiles = []
 board_back = pg.Rect(0, 0, 0, 0)
 selected = None
-game = None
+solving = False
+
+
+def solve():
+    global board
+    game = SudokuGame(board)
+    res = game.solve()
+
+    if res:
+        board = game.create_board_from_assignment(res)
 
 
 def draw_board():
@@ -77,18 +86,15 @@ while True:
                             selected = (x, y)
 
         if event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
-            game = SudokuGame(board)
-            res = game.solve()
+            solve = threading.Thread(target=solve)
+            solve.start()
 
-            if res:
-                board = game.create_board_from_assignment(res)
+            solving = True
 
         if selected and event.type == pg.KEYDOWN:
             num = int(event.key)-pg.K_0
             if 0 <= num < 10:
                 board[selected[0]][selected[1]] = num
-
-            print(board)
 
     width, height = screen.get_size()
     screen.fill(bg_gray)
