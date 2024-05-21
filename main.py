@@ -117,6 +117,12 @@ while True:
             if 0 <= num < 10:
                 board[selected[0]][selected[1]] = num
 
+            if int(event.key) == pg.K_KP0:
+                board[selected[0]][selected[1]] = 0
+            num = int(event.key)-pg.K_KP1+1
+            if 1 <= num < 10:
+                board[selected[0]][selected[1]] = num
+
     width, height = screen.get_size()
     screen.fill(bg_gray)
     draw_board()
