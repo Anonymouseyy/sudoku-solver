@@ -106,11 +106,15 @@ while True:
             if solving_rect.collidepoint(event.pos):
                 solving = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-        if event.type == pg.KEYDOWN and event.key == pg.K_RETURN and not solving:
-            solve_thread = threading.Thread(target=solve)
-            solve_thread.start()
+        if event.type == pg.KEYDOWN and not solving:
+            if event.key == pg.K_RETURN:
+                solve_thread = threading.Thread(target=solve)
+                solve_thread.start()
 
-            solving = (0, 0, 0)
+                solving = (0, 0, 0)
+
+            if event.key == pg.K_BACKSPACE:
+                board = h.initial_state()
 
         if selected and event.type == pg.KEYDOWN and not solving:
             num = int(event.key)-pg.K_0
