@@ -18,6 +18,8 @@ font = pg.font.Font("OpenSans-Regular.ttf", 50)
 
 screen = pg.display.set_mode((width, height), pg.RESIZABLE)
 pg.display.set_caption('Sudoku Solver')
+pygame_icon = pg.image.load('logo.png')
+pg.display.set_icon(pygame_icon)
 
 board = h.initial_state()
 board_tiles = []
