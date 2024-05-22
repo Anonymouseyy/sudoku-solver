@@ -20,7 +20,7 @@ class SudokuGame:
 
         for i, j in self.domains.keys():
             for num in self.domains[i, j].copy():
-                if (num in self.board[i] or num in to_column_major(self.board)[j]
+                if (num in self.board[i] or num in to_row_column_major(self.board)[j]
                         or num in to_group_major(self.board)[get_group(i, j)]):
                     self.domains[i, j].remove(num)
 

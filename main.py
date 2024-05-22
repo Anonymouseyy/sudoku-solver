@@ -12,8 +12,8 @@ black = (0, 0, 0)
 white = (255, 255, 255)
 bg_gray = (51, 51, 51)
 board_gray = (84, 84, 84)
-tile_color = (227, 227, 227)
 selected_color = (150, 187, 250)
+assigned_color = (25, 94, 212)
 font = pg.font.Font("OpenSans-Regular.ttf", 50)
 
 screen = pg.display.set_mode((width, height), pg.RESIZABLE)
@@ -24,27 +24,30 @@ board_tiles = []
 board_back = pg.Rect(0, 0, 0, 0)
 selected = None
 solving = None
+assignment = None
 solving_rect = pg.Rect(0, 0, 0, 0)
 
 
 def solve():
-    global board, solving
+    global solving, assignment
     game = SudokuGame(board)
     res = game.solve()
 
     if res:
-        board = game.create_board_from_assignment(res)
+        assignment = res
 
     solving = None
 
 
 def draw_board():
-    global board_tiles, board_back
+    global board_tiles, board_back, assignment
     board_tiles = []
     dim = min(width, height) - 100
     tile_dim = dim // 9
     line_width = 2
     dim = tile_dim * 9 + line_width * 2
+    if assignment is None:
+        assignment = dict()
 
     board_back = pg.Rect(0, 0, dim, dim)
     board_back.center = (width // 2, height // 2)
@@ -62,12 +65,21 @@ def draw_board():
             if j == 3 or j == 6:
                 y_off += line_width
 
-            col = tile_color
+            col = None
             if selected == (i, j):
                 col = selected_color
 
+            text_col = None
+            val = board[i][j]
+            if (i, j) in assignment.keys():
+                val = assignment[(i, j)]
+                text_col = assigned_color
+            if board[i][j]:
+                text_col = None
+                val = board[i][j]
+
             tile = h.Tile(board_back.left + (tile_dim * i) + x_off, board_back.top + (tile_dim * j) + y_off, tile_dim,
-                          board[i][j], col)
+                          val, col, text_col)
             tile.draw(screen)
             tile_row.append(tile)
 
@@ -115,6 +127,7 @@ while True:
 
             if event.key == pg.K_BACKSPACE:
                 board = h.initial_state()
+                assignment = None
 
             if event.key == pg.K_TAB:
                 if selected is None or selected == (8, 8):

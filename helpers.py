@@ -5,7 +5,7 @@ value_font = pg.font.Font("OpenSans-Regular.ttf", 50)
 
 
 class Tile:
-    def __init__(self, x=0, y=0, d=0, value=0, color=(227, 227, 227), text_color=(0, 0, 0)):
+    def __init__(self, x=0, y=0, d=0, value=0, color=None, text_color=None):
         self.x = x
         self.y = y
         self.d = d
@@ -13,6 +13,11 @@ class Tile:
         self.color = color
         self.text_color = text_color
         self.rect = None
+
+        if self.color is None:
+            self.color = (227, 227, 227)
+        if self.text_color is None:
+            self.text_color = (0, 0, 0)
 
     def draw(self, surface):
         self.rect = pg.Rect(0, 0, self.d, self.d)
